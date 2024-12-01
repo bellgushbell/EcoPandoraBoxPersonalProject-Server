@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  password    String
+  firstName   String        @map("first_name")
+  lastName    String?       @map("last_name")
+  phone       String?
+  gender      String?
+  role        Role          @default(USER)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  donations   Donations[]
+  randomItems RandomItems[]
+  addresses   Addresses[]
+  chatbox     Chatbox?
+
+  @@map("user")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Campaigns {
+  id           Int         @id @default(autoincrement())
+  name         String
+  description  String?
+  image        String?
+  goalAmount   Decimal     @db.Decimal(10, 2)
+  raisedAmount Decimal     @db.Decimal(10, 2)
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  donations    Donations[]
+
+  @@map("campaigns")
+}
+
+model Donations {
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  campaignId    Int
+  amount        Decimal       @db.Decimal(10, 2)
+  paymentStatus PaymentStatus
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaigns Campaigns @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@map("donations")
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+}
+
+model RandomItems {
+  id          Int      @id @default(autoincrement())
+  userId      Int?
+  name        String
+  description String?
+  image       String?
+  priceRange  Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("randomitems")
+}
+
+model Addresses {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  fullName    String
+  addressLine String
+  city        String
+  postalCode  String
+  phone       String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
+}
+
+model Chatbox {
+  id       Int       @id @default(autoincrement())
+  socketId String    @unique
+  userId   Int?      @unique
+  user     User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
+}
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  message   String
+  isAdmin   Boolean   @default(false)
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  chatboxId Int       @map("chatbox_id")
+  chatbox   Chatbox   @relation(fields: [chatboxId], references: [id], onDelete: Cascade)
+}

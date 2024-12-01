@@ -1,0 +1,31 @@
+{
+  "name": "ecopandorabox-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js",
+    "delDB": "node prisma/resetDB.js",
+    "pushDB": "npx prisma db push",
+    "seedDB": "npx prisma db seed",
+    "resetDB": "npm run delDB &&  npm run pushDB && npm run seedDB"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.0.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.7",
+    "prisma": "^6.0.0"
+  }
+}
