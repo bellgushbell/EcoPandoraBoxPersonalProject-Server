@@ -40,15 +40,16 @@ const campaignsData = [
     {
         name: "Flood Relief Donation",
         description: "Help communities affected by flooding with essential supplies.",
-        image: "flood_relief.png",
+        image: "https://images.pexels.com/photos/1739855/pexels-photo-1739855.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         goalAmount: 50000.0,
         raisedAmount: 12000.0,
         isActive: true,
     },
+
     {
         name: "Save the Ocean",
         description: "Help us clean the ocean and save marine life.",
-        image: "ocean.png",
+        image: "https://images.pexels.com/photos/2765872/pexels-photo-2765872.jpeg?auto=compress&cs=tinysrgb&w=800",
         goalAmount: 50000.0,
         raisedAmount: 2500.0,
         isActive: true,
@@ -56,12 +57,40 @@ const campaignsData = [
     {
         name: "Plant a Tree",
         description: "Plant more trees for a better environment.",
-        image: "tree.png",
+        image: "https://images.pexels.com/photos/1072824/pexels-photo-1072824.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         goalAmount: 30000.0,
         raisedAmount: 4500.0,
         isActive: true,
     },
+    {
+        name: "Reduce Food Waste",
+        description: "Support programs that distribute surplus food to those in need.",
+        image: "https://images.pexels.com/photos/2284166/pexels-photo-2284166.jpeg?auto=compress&cs=tinysrgb&w=800",
+        goalAmount: 40000.0,
+        raisedAmount: 5000.0,
+        isActive: true,
+    },
+
+    {
+        name: "Help Starving Children",
+        description: "Provide food and nutrition to underprivileged children.",
+        image: "https://tinyurl.com/9784bwra",
+        goalAmount: 60000.0,
+        raisedAmount: 20000.0,
+        isActive: true,
+    },
+    {
+        name: "Earthquake Relief",
+        description: "Support families affected by recent earthquakes with shelter and food.",
+        image: "https://images.pexels.com/photos/14000726/pexels-photo-14000726.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        goalAmount: 70000.0,
+        raisedAmount: 18000.0,
+        isActive: true,
+    },
+
+
 ];
+
 
 const randomItemsData = [
     // หลัก 10 บาท

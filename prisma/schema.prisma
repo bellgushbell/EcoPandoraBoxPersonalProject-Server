@@ -54,14 +54,14 @@ model Campaigns {
 
 model Donations {
   id            Int           @id @default(autoincrement())
-  userId        Int
+  userId        Int?
   campaignId    Int
   amount        Decimal       @db.Decimal(10, 2)
   paymentStatus PaymentStatus
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime      @updatedAt @map("updated_at")
 
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   campaigns Campaigns @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
   @@map("donations")
