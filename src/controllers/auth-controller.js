@@ -48,9 +48,13 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
+        console.log("Received email:", email);
+        console.log("Received password:", password);
+
         // ตรวจสอบว่า email มีอยู่ในระบบหรือไม่
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
+            console.log("User not found for email:", email);
             throw createError(400, "Invalid email or password");
         }
 
@@ -64,8 +68,8 @@ exports.login = async (req, res, next) => {
         const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.SECRET_KEY,
             { expiresIn: "1d" }
         )
-
-        res.json({ message: "Login successful", token });
+        const { password: ps, createdAt, updatedAt, ...respData } = user
+        res.json({ message: "Login successful", token, user: respData });
 
     } catch (error) {
         next(error)

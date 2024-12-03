@@ -14,20 +14,21 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  email       String        @unique
-  password    String
-  firstName   String        @map("first_name")
-  lastName    String?       @map("last_name")
-  phone       String?
-  gender      String?
-  role        Role          @default(USER)
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
-  donations   Donations[]
-  randomItems RandomItems[]
-  addresses   Addresses[]
-  chatbox     Chatbox?
+  id                  Int                   @id @default(autoincrement())
+  email               String                @unique
+  password            String
+  firstName           String                @map("first_name")
+  lastName            String?               @map("last_name")
+  phone               String?
+  gender              String?
+  role                Role                  @default(USER)
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  donations           Donations[]
+  randomItems         RandomItems[]
+  addresses           Addresses[]
+  chatbox             Chatbox?
+  receivedRandomItems ReceivedRandomItems[]
 
   @@map("user")
 }
@@ -82,14 +83,26 @@ model RandomItems {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                User?                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  receivedRandomItems ReceivedRandomItems[]
 
   @@map("randomitems")
 }
 
+model ReceivedRandomItems {
+  id           Int         @id @default(autoincrement())
+  userId       Int?
+  randomItemId Int
+  obtainedAt   DateTime    @default(now())
+  user         User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  randomItem   RandomItems @relation(fields: [randomItemId], references: [id], onDelete: Cascade)
+
+  @@map("received_random_items")
+}
+
 model Addresses {
   id          Int      @id @default(autoincrement())
-  userId      Int
+  userId      Int?
   fullName    String
   addressLine String
   city        String
@@ -98,7 +111,7 @@ model Addresses {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("addresses")
 }

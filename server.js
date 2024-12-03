@@ -6,6 +6,9 @@ const handleNotFound = require("./src/middlewares/notFound")
 const campaignRoutes = require("./src/routes/campaign-route")
 const authRoutes = require("./src/routes/auth-route")
 const paymentRoutes = require("./src/routes/payment-route")
+const randomItemsRoutes = require("./src/routes/randomItems-route")
+const addressRoutes = require("./src/routes/address-route")
+
 // config
 require("dotenv").config();
 const app = express()
@@ -20,7 +23,8 @@ app.use(express.json())
 app.use("/auth", authRoutes)
 app.use("/campaign", campaignRoutes)
 app.use("/payment", paymentRoutes)
-
+app.use("/randomitems", randomItemsRoutes)
+app.use("/address", addressRoutes)
 // exit middlewares
 app.use("*", handleNotFound)
 app.use(handleError)
