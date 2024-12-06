@@ -53,6 +53,7 @@ module.exports.getChatHistory = async (req, res, next) => {
         const chatHistory = await prisma.message.findMany({
             where: { chatboxId: chatBoxId },
             orderBy: { createdAt: "asc" }, // เรียงตามเวลา
+            select: { id: true, message: true, isAdmin: true, createdAt: true, isRead: true }, // เพิ่ม createdAt เอาไปทำเวลาข้อความ
         });
 
         res.json(chatHistory);
@@ -61,6 +62,9 @@ module.exports.getChatHistory = async (req, res, next) => {
         next(error);
     }
 };
+
+
+
 
 
 
@@ -119,6 +123,7 @@ module.exports.getChatHistory = async (req, res, next) => {
 //         const chatHistory = await prisma.message.findMany({
 //             where: { chatboxId: chatBoxId },
 //             orderBy: { createdAt: "asc" }, // เรียงตามเวลา
+//             select: { id: true, message: true, isAdmin: true, createdAt: true, isRead: true }, // เพิ่ม createdAt เอาไปทำเวลาข้อความ
 //         });
 
 //         res.json(chatHistory);
