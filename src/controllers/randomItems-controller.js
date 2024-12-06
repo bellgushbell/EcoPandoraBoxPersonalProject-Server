@@ -2,7 +2,6 @@ const prisma = require("../configs/prisma");
 
 exports.RandomItems = async (req, res, next) => {
     try {
-
         const { totalPrice } = req.body;
 
         // ตรวจสอบความถูกต้องของ totalPrice
@@ -33,7 +32,6 @@ exports.RandomItems = async (req, res, next) => {
             },
         });
 
-
         if (items.length === 0) {
             return res.status(404).json({ message: "No items found in this price range." });
         }
@@ -42,17 +40,18 @@ exports.RandomItems = async (req, res, next) => {
         const randomItem = items[Math.floor(Math.random() * items.length)];
 
         // บันทึกประวัติการได้รับไอเท็มลงในตาราง ReceivedRandomItems
-        await prisma.receivedRandomItems.create({
+        const receivedItem = await prisma.receivedRandomItems.create({
             data: {
                 userId: req.userId || null,
                 randomItemId: randomItem.id,
             },
         });
 
-
-        res.json(randomItem);
+        res.json({
+            randomItem,
+            receivedItemId: receivedItem.id // ส่ง id กลับมา
+        });
     } catch (error) {
-
         next(error);
     }
 };

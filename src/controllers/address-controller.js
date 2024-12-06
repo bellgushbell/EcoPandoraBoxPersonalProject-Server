@@ -52,3 +52,40 @@ exports.saveAddress = async (req, res, next) => {
         next(error);
     }
 };
+
+
+
+exports.getAddressId = async (req, res, next) => {
+    try {
+        const userId = req.query.userId || null; // รับ userId จาก query string
+        if (!userId) {
+            // ตรวจสอบ guest address ใน req.body
+            const { fullName, addressLine, city, postalCode, phone } = req.body;
+
+            if (!fullName || !addressLine || !city || !postalCode || !phone) {
+                return res.status(400).json({ message: 'Incomplete guest address data.' });
+            }
+
+            // สร้าง address สำหรับ guest
+            const newAddress = await prisma.addresses.create({
+                data: { fullName, addressLine, city, postalCode, phone, userId: null },
+            });
+
+            return res.json({ addressId: newAddress.id }); // ส่งกลับ addressId ใหม่
+        }
+
+        // สำหรับผู้ใช้ที่มี userId
+        const address = await prisma.addresses.findFirst({
+            where: { userId: parseInt(userId) },
+            select: { id: true },
+        });
+
+        if (!address) {
+            return res.status(404).json({ message: 'Address not found.' });
+        }
+
+        res.json({ addressId: address.id });
+    } catch (error) {
+        next(error);
+    }
+};

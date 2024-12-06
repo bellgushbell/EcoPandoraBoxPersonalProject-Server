@@ -2,7 +2,9 @@ const prisma = require("../configs/prisma")
 const createError = require("../utility/createError")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-
+const cloudinary = require('../configs/cloudinary');
+const fs = require('fs');
+const path = require('path');
 
 exports.register = async (req, res, next) => {
     try {
@@ -113,5 +115,41 @@ exports.currentUser = async (req, res, next) => {
 
         console.error(err);
         next(err);
+    }
+};
+
+
+exports.uploadAvatar = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const haveFile = !!req.file; // ตรวจสอบว่ามีไฟล์หรือไม่ Boolean
+        let uploadResult = {};
+
+        if (haveFile) {
+            uploadResult = await cloudinary.uploader.upload(req.file.path, {
+                public_id: path.parse(req.file.path).name, // ตั้งชื่อไฟล์
+                overwrite: true,
+            });
+
+            // ลบไฟล์ local หลังอัปโหลดเสร็จ
+            fs.unlink(req.file.path, (err) => {
+                if (err) {
+                    console.error("Failed to delete local file:", err);
+                } else {
+                    console.log("Local file deleted successfully");
+                }
+            });
+        }
+
+        // บันทึก URL ของรูปภาพลงฐานข้อมูล
+        await prisma.user.update({
+            where: { id: userId },
+            data: { profileImage: uploadResult.secure_url },
+        });
+
+        res.status(200).json({ message: 'Avatar uploaded successfully', avatarUrl: uploadResult.secure_url });
+    } catch (error) {
+        console.error('Error uploading avatar:', error);
+        res.status(500).json({ error: 'Error uploading avatar' });
     }
 };
