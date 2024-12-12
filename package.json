@@ -9,7 +9,8 @@
     "delDB": "node prisma/resetDB.js",
     "pushDB": "npx prisma db push",
     "seedDB": "npx prisma db seed",
-    "resetDB": "npm run delDB &&  npm run pushDB && npm run seedDB"
+    "resetDB": "npm run delDB &&  npm run pushDB && npm run seedDB",
+    "start": "node server.js"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
