@@ -132,6 +132,8 @@ model Shipping {
   user         User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
   address      Addresses?          @relation(fields: [addressId], references: [id], onDelete: Cascade)
   receivedItem ReceivedRandomItems @relation(fields: [receivedItemId], references: [id], onDelete: Cascade)
+
+  @@map("shipping")
 }
 
 enum ShippingStatus {
@@ -147,6 +149,8 @@ model Chatbox {
   userId   Int?      @unique
   user     User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages Message[]
+
+  @@map("chatbox")
 }
 
 model Message {
@@ -158,4 +162,6 @@ model Message {
   createdAt DateTime  @default(now())
   chatboxId Int       @map("chatbox_id")
   chatbox   Chatbox   @relation(fields: [chatboxId], references: [id], onDelete: Cascade)
+
+  @@map("message")
 }
