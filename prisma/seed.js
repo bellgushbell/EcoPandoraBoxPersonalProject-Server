@@ -76,7 +76,7 @@ const campaignsData = [
     {
         name: "Help Starving Children",
         description: "Provide food and nutrition to underprivileged children.",
-        image: "https://tinyurl.com/9784bwra",
+        image: "https://live.staticflickr.com/7375/9687984332_cc7e555636_b.jpg",
         goalAmount: 60000.0,
         raisedAmount: 20000.0,
         isActive: true,

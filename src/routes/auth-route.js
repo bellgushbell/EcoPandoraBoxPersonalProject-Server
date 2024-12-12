@@ -11,4 +11,11 @@ router.get("/user", authenticate, authController.currentUser);
 //uploadProfilePic
 router.post("/upload-avatar", authenticate, upload.single('avatar'), authController.uploadAvatar)
 
+
+//admin
+
+router.patch("/update-member", authController.UpdateMember)
+router.get("/userAll", authController.getAllUser)
+
+
 module.exports = router

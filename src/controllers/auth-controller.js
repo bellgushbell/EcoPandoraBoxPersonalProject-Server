@@ -153,3 +153,47 @@ exports.uploadAvatar = async (req, res) => {
         res.status(500).json({ error: 'Error uploading avatar' });
     }
 };
+
+
+
+
+// controllers/authController.js
+exports.UpdateMember = async (req, res) => {
+    try {
+        const { id, role } = req.body;
+
+        // ตรวจสอบว่า role ที่ส่งมาอยู่ใน enum Role หรือไม่
+        if (!['USER', 'ADMIN'].includes(role)) {
+            return res.status(400).json({ message: 'Invalid role' });
+        }
+
+        // อัปเดตข้อมูลผู้ใช้
+        const updatedUser = await prisma.user.update({
+            where: { id },
+            data: { role },
+        });
+
+        res.status(200).json({ message: 'User updated successfully', updatedUser });
+    } catch (error) {
+        console.error('Error updating member:', error);
+        res.status(500).json({ message: 'Error updating member' });
+    }
+};
+
+
+exports.getAllUser = async (req, res) => {
+
+    try {
+        const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                email: true,
+                role: true,
+            },
+        });
+        res.status(200).json(users);
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({ message: "Error fetching users" });
+    }
+}

@@ -40,6 +40,7 @@ app.use("/randomitems", randomItemsRoutes);
 app.use("/address", addressRoutes);
 app.use("/shipping", shippingRoutes);
 app.use("/chathistory", chatHistoryRoutes);
+
 // exit middlewares
 app.use("*", handleNotFound);
 app.use(handleError);

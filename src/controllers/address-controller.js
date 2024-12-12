@@ -21,6 +21,7 @@ exports.getAddress = async (req, res, next) => {
 // บันทึกหรืออัปเดตที่อยู่
 exports.saveAddress = async (req, res, next) => {
     try {
+        console.log('Request Body:', req.body); // ตรวจสอบค่า userId ใน request body
         const { userId, fullName, addressLine, city, postalCode, phone } = req.body;
 
         if (!fullName || !addressLine || !city || !postalCode || !phone) {
@@ -28,8 +29,8 @@ exports.saveAddress = async (req, res, next) => {
         }
 
         if (userId) {
-            // อัปเดตหรือสร้างที่อยู่สำหรับ User
-            const existingAddress = await prisma.addresses.findFirst({ where: { userId } });
+            // ตรวจสอบว่ามี address อยู่แล้วหรือไม่
+            const existingAddress = await prisma.addresses.findFirst({ where: { userId: parseInt(userId) } });
             if (existingAddress) {
                 await prisma.addresses.update({
                     where: { id: existingAddress.id },
@@ -37,13 +38,13 @@ exports.saveAddress = async (req, res, next) => {
                 });
             } else {
                 await prisma.addresses.create({
-                    data: { userId, fullName, addressLine, city, postalCode, phone },
+                    data: { userId: parseInt(userId), fullName, addressLine, city, postalCode, phone },
                 });
             }
         } else {
-            // Guest: บันทึกที่อยู่โดยไม่ผูกกับ User
+            // สร้าง address สำหรับ Guest
             await prisma.addresses.create({
-                data: { fullName, addressLine, city, postalCode, phone },
+                data: { userId: null, fullName, addressLine, city, postalCode, phone },
             });
         }
 
@@ -52,6 +53,7 @@ exports.saveAddress = async (req, res, next) => {
         next(error);
     }
 };
+
 
 
 
